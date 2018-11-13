@@ -1,0 +1,6 @@
+---
+- hosts: all
+  tasks:
+    - name: pring hello world
+      debug:
+        msg: hello world
