@@ -1,7 +1,13 @@
 ---
 - hosts: all
+  vars:
+    failed: false
   gather_facts: false
   tasks:
     - name: pring hello world
       debug:
         msg: hello world
+    - name: check failure
+      fail:
+      when:
+        - failed | default(False)
