@@ -1,0 +1,7 @@
+---
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: print success message
+      debug:
+        msg: this task is success
