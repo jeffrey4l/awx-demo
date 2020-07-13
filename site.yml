@@ -7,6 +7,9 @@
     - name: pring hello world
       debug:
         msg: hello world
+    - name: print /etc/resolv.conf
+      shell: |
+        cat /etc/resolv.conf
     - name: check failure
       fail:
       when:
