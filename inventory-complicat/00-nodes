@@ -1,0 +1,81 @@
+[all:vars]
+os_net_config_yaml=/etc/ict/sriovdpdkcompute_network.yaml
+interface_mapping_yaml=/etc/ict/network_mapping1.yaml
+
+default_container_dimensions={'cpuset_cpus': '{{ default_cpuset_cpus}}'}
+# set cpuset_cpus for nova_libvirt cause vm start failed.
+nova_libvirt_dimensions={}
+tuned_profile=ict-cpu-partitioning
+
+[control:vars]
+hugepages=312
+default_cpuset_cpus="0-3,36-39,18-21,54-57"
+pmd_cpu_list="4,40,22,58"
+isolcpus="4-17,40-53,22-35,58-71"
+
+[compute:vars]
+enable_ovs_dpdk=true
+hugepagesz=1G
+dpdk_socket_mem="8196,8196"
+dpdk_lcore_list={{default_cpuset_cpus}}
+hugepages=344
+default_cpuset_cpus="0-1,36-37,18-19,54-55"
+pmd_cpu_list="2,38,20,56"
+isolcpus="2-17,38-53,20-35,56-71"
+enable_neutron_sriov="yes"
+sriov_vfs=30
+passthrough_whitelist = [{"devname": "ens1f2", "physical_network": "physnet1"},{"devname": "ens1f3", "physical_network": "physnet1"}]
+physical_device_mappings = physnet1:ens1f2,physnet1:ens1f3
+
+[controlcompute2:vars]
+interface_mapping_yaml=/etc/ict/network_mapping2.yaml
+passthrough_whitelist = [{"devname": "ens2f2", "physical_network": "physnet1"},{"devname": "ens2f3", "physical_network": "physnet1"}]
+physical_device_mappings = physnet1:ens2f2,physnet1:ens2f3
+
+[sriovdpdkcompute2:vars]
+interface_mapping_yaml=/etc/ict/network_mapping2.yaml
+passthrough_whitelist = [{"devname": "ens2f2", "physical_network": "physnet1"},{"devname": "ens2f3", "physical_network": "physnet1"}]
+physical_device_mappings = physnet1:ens2f2,physnet1:ens2f3
+
+[compute:children]
+control
+sriovdpdkcompute1
+sriovdpdkcompute2
+
+[control:children]
+controlcompute1
+controlcompute2
+
+[controlcompute1]
+control01 node_id=110 ansible_host=172.20.128.210
+
+[controlcompute2]
+control02 node_id=118 ansible_host=172.20.128.218
+control03 node_id=129 ansible_host=172.20.128.229
+
+[sriovdpdkcompute2]
+compute01 node_id=101 ansible_host=172.20.128.201
+
+[sriovdpdkcompute1]
+compute02 node_id=102 ansible_host=172.20.128.202
+compute03 node_id=103 ansible_host=172.20.128.203
+compute04 node_id=106 ansible_host=172.20.128.206
+compute05 node_id=108 ansible_host=172.20.128.208
+compute06 node_id=111 ansible_host=172.20.128.211
+
+[network:children]
+control
+
+[storage:vars]
+os_net_config_yaml=/etc/ict/storage_network.yaml
+tuned_profile=throughput-performance
+
+[storage]
+storage01 node_id=131 ansible_host=172.20.128.231
+storage02 node_id=132 ansible_host=172.20.128.232
+storage03 node_id=133 ansible_host=172.20.128.233
+
+[deployment]
+
+[monitoring:children]
+control
