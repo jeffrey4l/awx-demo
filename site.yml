@@ -4,6 +4,10 @@
     failed: false
   gather_facts: false
   tasks:
+    - set_stats:
+        data:
+          progress: "1%"
+
     - name: task1
       shell: sleep 10
 
