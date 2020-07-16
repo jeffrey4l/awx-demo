@@ -4,12 +4,23 @@
     failed: false
   gather_facts: false
   tasks:
+    - name: task1
+      shell: sleep 10
+
+    - name: task2
+      shell: sleep 20
+
+    - name: task3
+      shell: sleep 30
+
     - name: pring hello world
       debug:
         msg: hello world
+
     - name: print /etc/resolv.conf
       shell: |
         cat /etc/resolv.conf
+
     - name: check failure
       fail:
       when:
