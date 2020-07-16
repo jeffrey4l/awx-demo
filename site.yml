@@ -13,6 +13,10 @@
     - name: task3
       shell: sleep 30
 
+    - set_stats:
+        data:
+          progress: "90%"
+
     - name: pring hello world
       debug:
         msg: hello world
